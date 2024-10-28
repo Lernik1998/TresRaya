@@ -78,7 +78,6 @@ function cargar() {
   };
 
   // Reiniciar el juego
-  // Reiniciar el juego
 
   // Pantalla error
 
@@ -105,4 +104,6 @@ function cargar() {
   }, 1000); // Duración de 3 segundos
 
   // Pantalla ganador
+
+  
 }
