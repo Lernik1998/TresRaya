@@ -67,12 +67,22 @@ const determinarGanador = () => {
 
 //Metodo actualizar marcador
 const actualizarMarcador = () => {
-  let marcadorA = document.getElementById("victoriasA");
-  let marcadorB = document.getElementById("victoriasB");
-
-  marcadorA.textContent = victoriasA;
-  marcadorB.textContent = victoriasB;
-};
+    let ganador = determinarGanador(); //me pasa el ganador de la partida
+    
+    if (ganador === 'X') { //añadimos al marcador del ganador el punto
+      victoriasA++;
+    } else if (ganador === 'O') {
+      victoriasB++;
+    }
+  
+    // Actualizar el marcador en la interfaz
+    let marcadorA = document.getElementById("victoriasA");
+    let marcadorB = document.getElementById("victoriasB");
+  
+    marcadorA.textContent = victoriasA;
+    marcadorB.textContent = victoriasB;
+  };
+  
 
 // Reiniciar el juego
 // Reiniciar el juego
