@@ -1,4 +1,14 @@
-// Determinar turno del jugador
+// Determinar turno del jugador, comienzan los rojos
+
+function turnoJugador() {
+  // Si hay un ganador(TRUE), llamamos actualizarMarcador
+  if (determinarGanador()) {
+  } else {
+    // Cambiamos de turno
+  }
+}
+
+// Obtenemos todos los td
 
 // Método para determinar el ganador
 
@@ -65,3 +75,17 @@ const actualizarMarcador = () => {
 };
 
 // Reiniciar el juego
+// Reiniciar el juego
+
+// Pantalla error
+
+let idError = setTimeout(function () {
+  // Abre la página de Google en una nueva ventana de 500x500px
+  let nuevaVentana = window.open(
+    "https://www.google.com",
+    "_blank",
+    "width=500,height=500"
+  );
+}, 3000); // Duración de 3 segundos
+
+// Pantalla ganador
