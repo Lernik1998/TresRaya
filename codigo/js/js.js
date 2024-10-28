@@ -55,7 +55,13 @@ const determinarGanador = () => {
   return false;
 };
 
+//Metodo actualizar marcador
+const actualizarMarcador = () => {
+  let marcadorA = document.getElementById("victoriasA");
+  let marcadorB = document.getElementById("victoriasB");
 
-
+  marcadorA.textContent = victoriasA;
+  marcadorB.textContent = victoriasB;
+};
 
 // Reiniciar el juego
