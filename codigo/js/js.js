@@ -81,11 +81,11 @@ const actualizarMarcador = () => {
 
 let idError = setTimeout(function () {
   // Abre la página de Google en una nueva ventana de 500x500px
-  let nuevaVentana = window.open(
-    "https://www.google.com",
-    "_blank",
-    "width=500,height=500"
-  );
+  //   let ventanaError = window.open(
+  //     "https://www.google.com",
+  //     "_blank",
+  //     "width=500,height=500"
+  //   );
 }, 3000); // Duración de 3 segundos
 
 // Pantalla ganador
