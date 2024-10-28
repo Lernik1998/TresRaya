@@ -1,4 +1,12 @@
-// Determinar turno del jugador
+// Determinar turno del jugador, comienzan los rojos
+
+function turnoJugador() {
+  // Si hay un ganador(TRUE), llamamos actualizarMarcador
+  if (determinarGanador()) {
+  } else {
+    // Cambiamos de turno
+  }
+}
 
 // Método para determinar el ganador
 
@@ -55,7 +63,8 @@ const determinarGanador = () => {
   return false;
 };
 
-
-
-
 // Reiniciar el juego
+
+// Pantalla error
+
+// Pantalla ganador
