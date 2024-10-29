@@ -9,66 +9,62 @@ let imgJugadorA = "../../imagenes/x.jpg";
 let imgJugadorB = "../../imagenes/o.jpg";
 
 function cargar() {
+  // Inicio del jugador
+  inicioJugador();
 
-  let fichas=Array.from(document.querySelectorAll("[draggable='true']"));
+  let fichas=Array.from(document.querySelectorAll("[draggable]"));
   let casillas=Array.from(document.getElementsByTagName("td"));
 
-  fichas.forEach((item)=>{
-    item.addEventListener("dragstart",dragstart);
+  fichas.forEach((item) => {
+    item.addEventListener("dragstart", dragstart);
   });
 
   casillas.forEach((item)=>{
-    item.addEventListener("dragenter",function(event){
+    item.addEventListener("dragenter",function (event){
         event.preventDefault();
     });
 
-    item.addEventListener("dragover",function(event){
-        event.preventDefault();
+    item.addEventListener("dragover", function (event) {
+      event.preventDefault();
     });
 
-    item.addEventListener("dragleave",function(event){
+    item.addEventListener("dragleave", function (event) {
       event.preventDefault();
     });
 
     item.addEventListener("drop",function(event){
         event.preventDefault();
-         // Comprobar si la casilla ya tiene un hijo
-      if (!event.target.hasChildNodes()) {
         event.target.appendChild(document.getElementById(event.dataTransfer.getData("text/plain")));
-        cambiarImagenTurno();
       } else {
         abrirVentanaEmergente("Error");
       }
     });
   });
 
-  function dragstart(e){
-      e.dataTransfer.setData('text/plain',e.target.id);
-  }
-
-  function cambiarImagenTurno(){
-
+  function dragstart(e) {
+    e.dataTransfer.setData("text/plain", e.target.id);
   }
 
   // Determinar turno del jugador, comienzan los rojos
   // Determinar turno del jugador de inicio
-  let jugadorEmpieza = Math.floor(Math.random() * 2) + 1;
+  function inicioJugador() {
+    // Rndom
+    let jugadorEmpieza = Math.floor(Math.random() * 2) + 1;
 
-  // Obtengo div del turno jugador
+    // Obtengo div del turno jugador
 
-  let divImagenTurno = document.getElementById("turnoJugador");
+    let divImagenTurno = document.getElementById("turnoJugador");
 
-  alert(divImagenTurno);
+    // Si es par empieza el jugador A
+    if (jugadorEmpieza % 2 == 0) {
+      jugadorActual = jugadorA;
 
-  // Si es par empieza el jugador A
-  if (jugadorEmpieza % 2 == 0) {
-    jugadorActual = jugadorA;
-
-    // Asigno en el div el siguiente contenido
-    divImagenTurno.innerHTML = `<img src="${imgJugadorA}" alt="${jugadorA}">`;
-  } else {
-    jugadorActual = jugadorB;
-    divImagenTurno.innerHTML = `<img src="${imgJugadorB}" alt="${jugadorB}">`;
+      // Asigno en el div el siguiente contenido
+      divImagenTurno.innerHTML = `<img src="${imgJugadorA}" alt="${jugadorA}">`;
+    } else {
+      jugadorActual = jugadorB;
+      divImagenTurno.innerHTML = `<img src="${imgJugadorB}" alt="${jugadorB}">`;
+    }
   }
 
   function turnoJugador() {
@@ -132,20 +128,21 @@ function cargar() {
 
   // Reiniciar el juego
 
-  // Pantalla error
+  // Pantalla error, no borrar el codigo por favor
 
-  /*
-  let idError = setTimeout(function () {
-    // Abre la página de Google en una nueva ventana de 500x500px
+  function abrirVentanaEmergente(mensaje) {
+    let idError = setTimeout(function () {
+      // Abre la página de Google en una nueva ventana de 500x500px
 
-    let ventanaError = window.open(
-      "about:blank",
-      "_blank",
-      "width=200px,height=100px,left=50px,top=50px" // Desde la ventana
-    );
+      let ventanaError = window.open(
+        "about:blank",
+        "_blank",
+        "width=200px,height=100px,left=50px,top=50px" // Desde la ventana
+      );
 
-    if (ventanaError) {
-      ventanaError.document.write(`
+      switch (mensaje) {
+        case "Error":
+          ventanaError.document.write(`
        <html>
         <head>
           <title>Error</title>
@@ -154,8 +151,42 @@ function cargar() {
         </body>
       </html>
       `);
-    }
-  }, 1000); // Duración de 3 segundos
-*/
+
+          // LLamada al método para que vuelva la ficha a su posición de origen
+          break;
+
+        case "Turno":
+          ventanaError.document.write(`
+       <html>
+        <head>
+          <title>Error</title>
+            <body>
+          <p>TURNO INCORRECTO.</p>
+        </body>
+      </html>
+      `);
+
+          break;
+        case "Ganador":
+          ventanaError.document.write(`
+       <html>
+        <head>
+          <title>Error</title>
+            <body>
+          <p>GANADOR JUGADOR X.</p>
+        </body>
+      </html>
+      `);
+          break;
+
+        default:
+          break;
+      }
+
+      if (ventanaError) {
+      }
+    }, 1000); // Duración de 3 segundos
+  }
+
   // Pantalla ganador
 }
