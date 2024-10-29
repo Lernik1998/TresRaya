@@ -12,16 +12,16 @@ function cargar() {
   // Inicio del jugador
   inicioJugador();
 
-  let fichas=Array.from(document.querySelectorAll("[draggable]"));
-  let casillas=Array.from(document.getElementsByTagName("td"));
+  let fichas = Array.from(document.querySelectorAll("[draggable]"));
+  let casillas = Array.from(document.getElementsByTagName("td"));
 
   fichas.forEach((item) => {
     item.addEventListener("dragstart", dragstart);
   });
 
-  casillas.forEach((item)=>{
-    item.addEventListener("dragenter",function (event){
-        event.preventDefault();
+  casillas.forEach((item) => {
+    item.addEventListener("dragenter", function (event) {
+      event.preventDefault();
     });
 
     item.addEventListener("dragover", function (event) {
@@ -32,12 +32,11 @@ function cargar() {
       event.preventDefault();
     });
 
-    item.addEventListener("drop",function(event){
-        event.preventDefault();
-        event.target.appendChild(document.getElementById(event.dataTransfer.getData("text/plain")));
-      } else {
-        abrirVentanaEmergente("Error");
-      }
+    item.addEventListener("drop", function (event) {
+      event.preventDefault();
+      event.target.appendChild(
+        document.getElementById(event.dataTransfer.getData("text/plain"))
+      );
     });
   });
 
@@ -45,7 +44,6 @@ function cargar() {
     e.dataTransfer.setData("text/plain", e.target.id);
   }
 
-  // Determinar turno del jugador, comienzan los rojos
   // Determinar turno del jugador de inicio
   function inicioJugador() {
     // Rndom
@@ -188,5 +186,6 @@ function cargar() {
     }, 1000); // Duración de 3 segundos
   }
 
-  // Pantalla ganador
+  // Función F5
+  
 }
