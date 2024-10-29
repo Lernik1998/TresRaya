@@ -104,6 +104,4 @@ function cargar() {
   }, 1000); // Duración de 3 segundos
 
   // Pantalla ganador
-
-  
 }
