@@ -1,5 +1,13 @@
 window.addEventListener("load", cargar);
 
+let jugadorA = "Jugador A";
+let jugadorB = "Jugador B";
+let jugadorActual;
+
+// Localizaciones de las imagenes
+let imgJugadorA = "../../imagenes/x.jpg";
+let imgJugadorB = "../../imagenes/o.jpg";
+
 function cargar() {
 
   let fichas=Array.from(document.querySelectorAll("[draggable='true']"));
@@ -33,6 +41,25 @@ function cargar() {
   }
 
   // Determinar turno del jugador, comienzan los rojos
+  // Determinar turno del jugador de inicio
+  let jugadorEmpieza = Math.floor(Math.random() * 2) + 1;
+
+  // Obtengo div del turno jugador
+
+  let divImagenTurno = document.getElementById("turnoJugador");
+
+  alert(divImagenTurno);
+
+  // Si es par empieza el jugador A
+  if (jugadorEmpieza % 2 == 0) {
+    jugadorActual = jugadorA;
+
+    // Asigno en el div el siguiente contenido
+    divImagenTurno.innerHTML = `<img src="${imgJugadorA}" alt="${jugadorA}">`;
+  } else {
+    jugadorActual = jugadorB;
+    divImagenTurno.innerHTML = `<img src="${imgJugadorB}" alt="${jugadorB}">`;
+  }
 
   function turnoJugador() {
     // Si hay un ganador(TRUE), llamamos actualizarMarcador
@@ -42,11 +69,11 @@ function cargar() {
     }
   }
 
-  // Obtenemos todos los td
-
   // Método para determinar el ganador
 
   const determinarGanador = () => {
+    // Tendriamos que obtener todos los td
+
     // Aqui se evalua las 3 primeras casillas y que el tablero esté definido
     if (tablero[0] == tablero[1] && tablero[0] == tablero[2] && tablero[0]) {
       return true; // Y si el 3 existe
@@ -112,6 +139,7 @@ function cargar() {
 
   // Pantalla error
 
+  /*
   let idError = setTimeout(function () {
     // Abre la página de Google en una nueva ventana de 500x500px
 
@@ -133,8 +161,14 @@ function cargar() {
       `);
     }
   }, 1000); // Duración de 3 segundos
-
+*/
   // Pantalla ganador
 
+
+  //Metodo comprobar casilla
+
+  function dragstart(e) {
+    e.dataTransfer.setData('text/plain',e.target.id);
+  }
   
 }
