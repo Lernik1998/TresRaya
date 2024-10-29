@@ -104,4 +104,11 @@ function cargar() {
   }, 1000); // Duración de 3 segundos
 
   // Pantalla ganador
+
+
+  //Metodo comprobar casilla
+
+  function dragstart(e) {
+    e.dataTransfer.setData('text/plain',e.target.id);
+  }
 }
