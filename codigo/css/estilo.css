@@ -2,11 +2,16 @@
 img {
     width: 50px; 
     height: 50px;
+    border: 1px solid black;
 }
 
 div {
   display: inline-block;
   border: 1px solid black;
+}
+
+#turnoJugador{
+  border: 0px;
 }
 
 td{
