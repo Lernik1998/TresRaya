@@ -35,6 +35,7 @@ function cargar() {
          // Comprobar si la casilla ya tiene un hijo
       if (!event.target.hasChildNodes()) {
         event.target.appendChild(document.getElementById(event.dataTransfer.getData("text/plain")));
+        cambiarImagenTurno();
       } else {
         abrirVentanaEmergente("Error");
       }
@@ -43,6 +44,10 @@ function cargar() {
 
   function dragstart(e){
       e.dataTransfer.setData('text/plain',e.target.id);
+  }
+
+  function cambiarImagenTurno(){
+
   }
 
   // Determinar turno del jugador, comienzan los rojos
