@@ -1,6 +1,36 @@
 window.addEventListener("load", cargar);
 
 function cargar() {
+
+  let fichas=Array.from(document.querySelectorAll("[draggable]"));
+  let casillas=Array.from(document.getElementsByTagName("td"));
+
+  fichas.forEach((item)=>{
+    item.addEventListener("dragstart",dragstart);
+  });
+
+  casillas.forEach((item)=>{
+    item.addEventListener("dragenter",function (event){
+        event.preventDefault();
+    });
+
+    item.addEventListener("dragover",function(event){
+        event.preventDefault();
+    });
+
+    item.addEventListener("dragleave",function(event){
+      event.preventDefault();
+    });
+
+    item.addEventListener("drop",function(event){
+        event.preventDefault();
+        event.target.appendChild(document.getElementById(event.dataTransfer.getData("text/plain")));
+    });
+  });
+
+  function dragstart(e){
+      e.dataTransfer.setData('text/plain',e.target.id);
+  }
   // Determinar turno del jugador, comienzan los rojos
 
   function turnoJugador() {
@@ -104,4 +134,6 @@ function cargar() {
   }, 1000); // Duración de 3 segundos
 
   // Pantalla ganador
+
+  
 }
