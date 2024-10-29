@@ -10,7 +10,7 @@ let imgJugadorB = "../../imagenes/o.jpg";
 
 function cargar() {
 
-  let fichas=Array.from(document.querySelectorAll("[draggable]"));
+  let fichas=Array.from(document.querySelectorAll("[draggable='true']"));
   let casillas=Array.from(document.getElementsByTagName("td"));
 
   fichas.forEach((item)=>{
@@ -18,7 +18,7 @@ function cargar() {
   });
 
   casillas.forEach((item)=>{
-    item.addEventListener("dragenter",function (event){
+    item.addEventListener("dragenter",function(event){
         event.preventDefault();
     });
 
@@ -44,6 +44,8 @@ function cargar() {
   function dragstart(e){
       e.dataTransfer.setData('text/plain',e.target.id);
   }
+
+  // Determinar turno del jugador, comienzan los rojos
   // Determinar turno del jugador de inicio
   let jugadorEmpieza = Math.floor(Math.random() * 2) + 1;
 
