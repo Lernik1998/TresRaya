@@ -32,7 +32,12 @@ function cargar() {
 
     item.addEventListener("drop",function(event){
         event.preventDefault();
+         // Comprobar si la casilla ya tiene un hijo
+      if (!event.target.hasChildNodes()) {
         event.target.appendChild(document.getElementById(event.dataTransfer.getData("text/plain")));
+      } else {
+        abrirVentanaEmergente("Error");
+      }
     });
   });
 
@@ -161,15 +166,4 @@ function cargar() {
   }, 1000); // Duración de 3 segundos
 */
   // Pantalla ganador
-
-<<<<<<< HEAD
-
-  //Metodo comprobar casilla
-
-  function dragstart(e) {
-    e.dataTransfer.setData('text/plain',e.target.id);
-  }
-=======
-  
->>>>>>> 2cb1f477d995eb5e8ca23d030994c80e85a134ac
 }
