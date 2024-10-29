@@ -99,6 +99,3 @@ let idError = setTimeout(function () {
 }, 3000); // Duración de 3 segundos
 
 // Pantalla ganador
-
-
-
