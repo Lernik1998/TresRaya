@@ -10,6 +10,9 @@ let victoriasB = 0;
 let imgJugadorA = "../../imagenes/x.jpg";
 let imgJugadorB = "../../imagenes/o.jpg";
 
+// Obtengo div del turno jugador
+let divImagenTurno = document.getElementById("turnoJugador");
+
 function cargar() {
   inicioJugador();
   let fichas = Array.from(document.querySelectorAll("[draggable='true']"));
@@ -46,11 +49,12 @@ function cargar() {
         if (ficha.className == jugadorActual) {
           // Mover la ficha a la casilla
           casilla.appendChild(ficha);
+
+          turnoJugador();
+          cambiarImagenTurno();
         } else {
           abrirVentanaEmergente("Turno");
         }
-        turnoJugador();
-        cambiarImagenTurno();
       } else {
         abrirVentanaEmergente("Error");
       }
@@ -60,10 +64,6 @@ function cargar() {
   function inicioJugador() {
     // Determinar turno del jugador de inicio
     let jugadorEmpieza = Math.floor(Math.random() * 2) + 1;
-
-    // Obtengo div del turno jugador
-
-    let divImagenTurno = document.getElementById("turnoJugador");
 
     // Si es par empieza el jugador A
     if (jugadorEmpieza % 2 == 0) {
@@ -119,12 +119,14 @@ function cargar() {
       const [a, b, c] = combinacionesGanadoras[i];
 
       // Verificar si las casillas tienen una clase de ficha y coinciden
-      if (
-        casillas[a].firstChild.className && // Asegurarse de que hay una ficha en la casilla
-        casillas[a].firstChild.className === casillas[b].firstChild.className &&
-        casillas[a].firstChild.className === casillas[c].firstChild.className
-      ) {
-        return casillas[a].firstChild.className; // Retorna 'x' o 'o' según el ganador
+      if(casillas[a].hasChildNodes() && casillas[b].hasChildNodes() && casillas[c].hasChildNodes()){
+        if (
+          casillas[a].firstChild.className && // Asegurarse de que hay una ficha en la casilla
+          casillas[a].firstChild.className === casillas[b].firstChild.className &&
+          casillas[a].firstChild.className === casillas[c].firstChild.className
+        ) {
+          return casillas[a].firstChild.className; // Retorna 'x' o 'o' según el ganador
+        }
       }
     }
     return false;
