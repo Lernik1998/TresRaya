@@ -1,62 +1,64 @@
 window.addEventListener("load", cargar);
 
-let jugadorA = "Jugador A";
-let jugadorB = "Jugador B";
+let jugadorA = "x";
+let jugadorB = "o";
 let jugadorActual;
-
-// Variables de puntuación
-let victoriasA;
-let victoriasB;
+let victoriasA = 0;
+let victoriasB = 0;
 
 // Localizaciones de las imagenes
 let imgJugadorA = "../../imagenes/x.jpg";
 let imgJugadorB = "../../imagenes/o.jpg";
 
 function cargar() {
-  // Inicio del jugador
   inicioJugador();
+  let fichas = Array.from(document.querySelectorAll("[draggable='true']"));
+  let casillas = Array.from(document.querySelectorAll("#tabla td"));
 
-  // Obtenemos todas las img draggables
-  let fichas = Array.from(document.querySelectorAll("[draggable]"));
-  // Y todos los td
-  let casillas = Array.from(document.getElementsByTagName("td"));
-
-  // A las imagenes les asigno eventos de drag and drop
-  fichas.forEach((item) => {
-    item.addEventListener("dragstart", dragstart);
-  });
-
-  // A todos los td les indicamos que prevengan su funcionalidad
-  casillas.forEach((item) => {
-    item.addEventListener("dragenter", function (event) {
-      event.preventDefault();
-    });
-
-    item.addEventListener("dragover", function (event) {
-      event.preventDefault();
-    });
-
-    item.addEventListener("dragleave", function (event) {
-      event.preventDefault();
-    });
-
-    // Añadimos un drop a los td
-    item.addEventListener("drop", function (event) {
-      event.preventDefault();
-      // Al td objetivo le pasamos
-      event.target.appendChild(
-        document.getElementById(event.dataTransfer.getData("text/plain"))
-      );
+  // Configurar el dragstart para almacenar el id de la ficha arrastrada
+  fichas.forEach((ficha) => {
+    ficha.addEventListener("dragstart", function (event) {
+      event.dataTransfer.setData("text", ficha.id); // Guardamos el id en dataTransfer
+      event.dataTransfer.effectAllowed = "move";
     });
   });
 
-  function dragstart(e) {
-    e.dataTransfer.setData("text/plain", e.target.id);
-  }
+  casillas.forEach((casilla) => {
+    casilla.addEventListener("dragenter", function (event) {
+      event.preventDefault();
+    });
 
-  // Determinar turno del jugador de inicio
+    casilla.addEventListener("dragover", function (event) {
+      event.preventDefault();
+    });
+
+    casilla.addEventListener("drop", function (event) {
+      event.preventDefault();
+
+      // Comprobar si la casilla ya tiene un hijo (una ficha)
+      if (!casilla.hasChildNodes()) {
+        // Obtener el id de la ficha desde dataTransfer
+        const fichaId = event.dataTransfer.getData("text");
+
+        // Seleccionar la ficha usando el id
+        const ficha = document.getElementById(fichaId);
+
+        if (ficha.className == jugadorActual) {
+          // Mover la ficha a la casilla
+          casilla.appendChild(ficha);
+        } else {
+          abrirVentanaEmergente("Turno");
+        }
+        turnoJugador();
+        cambiarImagenTurno();
+      } else {
+        abrirVentanaEmergente("Error");
+      }
+    });
+  });
+
   function inicioJugador() {
-    // Rndom
+    // Determinar turno del jugador de inicio
     let jugadorEmpieza = Math.floor(Math.random() * 2) + 1;
 
     // Obtengo div del turno jugador
@@ -77,16 +79,28 @@ function cargar() {
 
   function turnoJugador() {
     // Si hay un ganador(TRUE), llamamos actualizarMarcador
-    if (determinarGanador()) {
+    if (determinarGanador() == "x" || determinarGanador() == "o") {
+      actualizarMarcador();
     } else {
-      // Cambiamos de turno
+      if (jugadorActual == jugadorA) {
+        jugadorActual = jugadorB;
+      } else {
+        jugadorActual = jugadorA;
+      }
+    }
+  }
+
+  function cambiarImagenTurno() {
+    if (jugadorActual == jugadorA) {
+      divImagenTurno.innerHTML = `<img src="${imgJugadorA}" alt="${jugadorA}">`;
+    } else {
+      divImagenTurno.innerHTML = `<img src="${imgJugadorB}" alt="${jugadorB}">`;
     }
   }
 
   // Método para determinar el ganador
-
   const determinarGanador = () => {
-    let casillas = document.querySelectorAll("td");
+    let casillas = document.querySelectorAll("#tabla td");
 
     // Definir las combinaciones ganadoras del tablero
     const combinacionesGanadoras = [
@@ -99,24 +113,27 @@ function cargar() {
       [0, 4, 8], // Diagonales
       [2, 4, 6],
     ];
+
     // Revisar cada combinación ganadora
     for (let i = 0; i < combinacionesGanadoras.length; i++) {
       const [a, b, c] = combinacionesGanadoras[i];
 
+      // Verificar si las casillas tienen una clase de ficha y coinciden
       if (
-        casillas[a].className &&
-        casillas[a].className === casillas[b].className &&
-        casillas[a].className === casillas[c].className
+        casillas[a].firstChild.className && // Asegurarse de que hay una ficha en la casilla
+        casillas[a].firstChild.className === casillas[b].firstChild.className &&
+        casillas[a].firstChild.className === casillas[c].firstChild.className
       ) {
-        return casillas[a].className; // Retorna 'X' o 'O' según el ganador
+        return casillas[a].firstChild.className; // Retorna 'x' o 'o' según el ganador
       }
     }
+    return false;
   };
 
-  //Metodo actualizar marcador
+  // Método para actualizar el marcador
   const actualizarMarcador = () => {
-    let casillas = document.querySelectorAll("td");
     let ganador = determinarGanador();
+    abrirVentanaEmergente("Ganador");
 
     if (ganador === "x") {
       victoriasA++;
@@ -124,12 +141,13 @@ function cargar() {
       victoriasB++;
     }
 
-    let marcadorA = document.getElementById("victoriasA");
-    let marcadorB = document.getElementById("victoriasB");
-
-    marcadorA.textContent = victoriasA;
-    marcadorB.textContent = victoriasB;
+    // Actualizar el marcador en el HTML
+    document.getElementById("victoriasA").textContent = victoriasA;
+    document.getElementById("victoriasB").textContent = victoriasB;
   };
+
+  // Cargar el tablero y la funcionalidad al cargar la página
+  window.addEventListener("load", cargar);
 
   // Reiniciar el juego
 
@@ -201,7 +219,7 @@ function cargar() {
     // Obtengo la tecla pulsada
     let teclaPulsada = event.key;
 
-    alert(teclaPulsada);
+    //alert(teclaPulsada);
     // Si es F5
     if (teclaPulsada === "F5") {
       // Prevengo el comportamiento por defecto de F5 (recargar la página)
