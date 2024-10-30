@@ -1,8 +1,11 @@
 window.addEventListener("load", cargar);
 
+// Variables empleadas para el control de los jugadores
 let jugadorA = "x";
 let jugadorB = "o";
+// Variable para obtener el jugador en turno
 let jugadorActual;
+// Contadores de victorias
 let victoriasA = 0;
 let victoriasB = 0;
 
@@ -14,7 +17,9 @@ let imgJugadorB = "../../imagenes/o.jpg";
 let divImagenTurno = document.getElementById("turnoJugador");
 
 function cargar() {
+  // Determinamos el jugador que comienza
   inicioJugador();
+  // Obtenemos las fichas (dragables) y las casillas
   let fichas = Array.from(document.querySelectorAll("[draggable='true']"));
   let casillas = Array.from(document.querySelectorAll("#tabla td"));
 
@@ -90,6 +95,7 @@ function cargar() {
     }
   }
 
+  // Cambiamos la imagen del turno
   function cambiarImagenTurno() {
     if (jugadorActual == jugadorA) {
       divImagenTurno.innerHTML = `<img src="${imgJugadorA}" alt="${jugadorA}">`;
@@ -119,10 +125,15 @@ function cargar() {
       const [a, b, c] = combinacionesGanadoras[i];
 
       // Verificar si las casillas tienen una clase de ficha y coinciden
-      if(casillas[a].hasChildNodes() && casillas[b].hasChildNodes() && casillas[c].hasChildNodes()){
+      if (
+        casillas[a].hasChildNodes() &&
+        casillas[b].hasChildNodes() &&
+        casillas[c].hasChildNodes()
+      ) {
         if (
           casillas[a].firstChild.className && // Asegurarse de que hay una ficha en la casilla
-          casillas[a].firstChild.className === casillas[b].firstChild.className &&
+          casillas[a].firstChild.className ===
+            casillas[b].firstChild.className &&
           casillas[a].firstChild.className === casillas[c].firstChild.className
         ) {
           return casillas[a].firstChild.className; // Retorna 'x' o 'o' según el ganador
@@ -233,19 +244,19 @@ function cargar() {
       let marcadorA = document.getElementById("victoriasA");
       let marcadorB = document.getElementById("victoriasB");
 
-      marcadorA.innerHTML = 0;
-      marcadorB.innerHTML = 0;
-
       // Llama a la función que reinicia las casillas
       reestablecerFichas();
+
+      marcadorA.innerHTML = 0;
+      marcadorB.innerHTML = 0;
     }
   }
   // Recorro todos los td y verifico si tienen algo
   function reestablecerFichas() {
     // Obtengo todos los td
     let casillas = Array.from(document.getElementsByTagName("td"));
-    let fichasX=Array.from(document.getElementsByClassName("x"));
-    let fichasO=Array.from(document.getElementsByClassName("o"));
+    let fichasX = Array.from(document.getElementsByClassName("x"));
+    let fichasO = Array.from(document.getElementsByClassName("o"));
 
     // Recorro todas las casillas
     for (let i = 0; i < casillas.length; i++) {
@@ -262,14 +273,14 @@ function cargar() {
 
     const jugadorA = document.getElementById("jugadorA");
     const jugadorB = document.getElementById("jugadorB");
-    let br=Array.from(document.getElementsByTagName("br"));
-    br.forEach((element)=>element.remove());
+    let br = Array.from(document.getElementsByTagName("br"));
+    br.forEach((element) => element.remove());
 
-    fichasX.forEach((ficha)=>{
+    fichasX.forEach((ficha) => {
       jugadorA.appendChild(ficha);
-      jugadorA .appendChild(document.createElement("br"));
+      jugadorA.appendChild(document.createElement("br"));
     });
-    fichasO.forEach((ficha)=>{
+    fichasO.forEach((ficha) => {
       jugadorB.appendChild(ficha);
       jugadorB.appendChild(document.createElement("br"));
     });
