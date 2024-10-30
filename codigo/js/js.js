@@ -11,19 +11,18 @@ let imgJugadorA = "../../imagenes/x.jpg";
 let imgJugadorB = "../../imagenes/o.jpg";
 
 function cargar() {
-  let fichas = Array.from(document.querySelectorAll("[draggable='true']"));
-  let casillas = Array.from(document.querySelectorAll("#tabla td"));
+  // Inicio del jugador
+  inicioJugador();
 
-  // Configurar el dragstart para almacenar el id de la ficha arrastrada
-  fichas.forEach((ficha) => {
-    ficha.addEventListener("dragstart", function (event) {
-      event.dataTransfer.setData("text", ficha.id); // Guardamos el id en dataTransfer
-      event.dataTransfer.effectAllowed = "move";
-    });
+  let fichas = Array.from(document.querySelectorAll("[draggable]"));
+  let casillas = Array.from(document.getElementsByTagName("td"));
+
+  fichas.forEach((item) => {
+    item.addEventListener("dragstart", dragstart);
   });
 
-  casillas.forEach((casilla) => {
-    casilla.addEventListener("dragenter", function (event) {
+  casillas.forEach((item) => {
+    item.addEventListener("dragenter", function (event) {
       event.preventDefault();
     });
 
@@ -33,27 +32,13 @@ function cargar() {
 
     casilla.addEventListener("drop", function (event) {
       event.preventDefault();
+    });
 
-      // Comprobar si la casilla ya tiene un hijo (una ficha)
-      if (!casilla.hasChildNodes()) {
-        // Obtener el id de la ficha desde dataTransfer
-        const fichaId = event.dataTransfer.getData("text");
-
-        // Seleccionar la ficha usando el id
-        const ficha = document.getElementById(fichaId);
-
-        if (ficha.className==jugadorActual) {
-          // Mover la ficha a la casilla
-          casilla.appendChild(ficha);
-          actualizarMarcador();
-        } else {
-          abrirVentanaEmergente("Error: Turno Incorrecto");
-        }
-        turnoJugador();
-        cambiarImagenTurno();
-      } else {
-        abrirVentanaEmergente("Error");
-      }
+    item.addEventListener("drop", function (event) {
+      event.preventDefault();
+      event.target.appendChild(
+        document.getElementById(event.dataTransfer.getData("text/plain"))
+      );
     });
   });
 
