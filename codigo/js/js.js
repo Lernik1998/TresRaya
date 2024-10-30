@@ -163,8 +163,7 @@ function cargar() {
       victoriasB++; 
     }
 
-    //Restablecemos el tablero
-    reestablecerFichas();
+    bloquearFichas();
 
     // Actualizar el marcador en el HTML
     document.getElementById("victoriasA").textContent = victoriasA;
@@ -257,5 +256,12 @@ function cargar() {
 
     // Y llamo a la función inicio
     inicioJugador();
+  }
+
+  function bloquearFichas() {
+    let fichasFinal = Array.from(document.querySelectorAll("[draggable='true']"));
+    fichasFinal.forEach(element => {
+      element.getAttribute("draggable") = false;
+    });
   }
 }
