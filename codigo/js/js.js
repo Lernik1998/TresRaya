@@ -137,8 +137,10 @@ function cargar() {
 
     if (ganador === "x") {
       victoriasA++;
+      reestablecerFichas();
     } else if (ganador === "o") {
       victoriasB++;
+      reestablecerFichas();
     }
 
     // Actualizar el marcador en el HTML
@@ -240,6 +242,8 @@ function cargar() {
   function reestablecerFichas() {
     // Obtengo todos los td
     let casillas = Array.from(document.getElementsByTagName("td"));
+    let fichasX=Array.from(document.getElementsByClassName("x"));
+    let fichasO=Array.from(document.getElementsByClassName("o"));
 
     // Recorro todas las casillas
     for (let i = 0; i < casillas.length; i++) {
@@ -256,10 +260,17 @@ function cargar() {
 
     const jugadorA = document.getElementById("jugadorA");
     const jugadorB = document.getElementById("jugadorB");
+    let br=Array.from(document.getElementsByTagName("br"));
+    br.forEach((element)=>element.remove());
 
-    // Vaciar las imágenes en los divs (si fuera necesario)
-    jugadorA.innerHTML = '<h3>Victorias A:<span id="victoriasA">0</span></h3>';
-    jugadorB.innerHTML = '<h3>Victorias B:<span id="victoriasB">0</span></h3>';
+    fichasX.forEach((ficha)=>{
+      jugadorA.appendChild(ficha);
+      jugadorA .appendChild(document.createElement("br"));
+    });
+    fichasO.forEach((ficha)=>{
+      jugadorB.appendChild(ficha);
+      jugadorB.appendChild(document.createElement("br"));
+    });
 
     // Y llamo a la función inicio
     inicioJugador();
