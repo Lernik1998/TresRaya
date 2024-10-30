@@ -3,14 +3,15 @@ window.addEventListener("load", cargar);
 let jugadorA = "x";
 let jugadorB = "o";
 let jugadorActual;
-let victoriasA=0;
-let victoriasB=0;
+let victoriasA = 0;
+let victoriasB = 0;
 
 // Localizaciones de las imagenes
 let imgJugadorA = "../../imagenes/x.jpg";
 let imgJugadorB = "../../imagenes/o.jpg";
 
 function cargar() {
+  inicioJugador();
   let fichas = Array.from(document.querySelectorAll("[draggable='true']"));
   let casillas = Array.from(document.querySelectorAll("#tabla td"));
 
@@ -42,11 +43,11 @@ function cargar() {
         // Seleccionar la ficha usando el id
         const ficha = document.getElementById(fichaId);
 
-        if (ficha.className==jugadorActual) {
+        if (ficha.className == jugadorActual) {
           // Mover la ficha a la casilla
           casilla.appendChild(ficha);
         } else {
-          abrirVentanaEmergente("Error: Turno Incorrecto");
+          abrirVentanaEmergente("Turno");
         }
         turnoJugador();
         cambiarImagenTurno();
@@ -56,30 +57,29 @@ function cargar() {
     });
   });
 
+  function inicioJugador() {
+    // Determinar turno del jugador de inicio
+    let jugadorEmpieza = Math.floor(Math.random() * 2) + 1;
 
-  // Determinar turno del jugador, comienzan los rojos
-  // Determinar turno del jugador de inicio
-  let jugadorEmpieza = Math.floor(Math.random() * 2) + 1;
+    // Obtengo div del turno jugador
 
-  // Obtengo div del turno jugador
+    let divImagenTurno = document.getElementById("turnoJugador");
 
-  let divImagenTurno = document.getElementById("turnoJugador");
+    // Si es par empieza el jugador A
+    if (jugadorEmpieza % 2 == 0) {
+      jugadorActual = jugadorA;
 
-
-  // Si es par empieza el jugador A
-  if (jugadorEmpieza % 2 == 0) {
-    jugadorActual = jugadorA;
-
-    // Asigno en el div el siguiente contenido
-    divImagenTurno.innerHTML = `<img src="${imgJugadorA}" alt="${jugadorA}">`;
-  } else {
-    jugadorActual = jugadorB;
-    divImagenTurno.innerHTML = `<img src="${imgJugadorB}" alt="${jugadorB}">`;
+      // Asigno en el div el siguiente contenido
+      divImagenTurno.innerHTML = `<img src="${imgJugadorA}" alt="${jugadorA}">`;
+    } else {
+      jugadorActual = jugadorB;
+      divImagenTurno.innerHTML = `<img src="${imgJugadorB}" alt="${jugadorB}">`;
+    }
   }
 
   function turnoJugador() {
     // Si hay un ganador(TRUE), llamamos actualizarMarcador
-    if (determinarGanador() == false) {
+    if (determinarGanador() == "x" || determinarGanador() == "o") {
       actualizarMarcador();
     } else {
       if (jugadorActual == jugadorA) {
@@ -90,10 +90,10 @@ function cargar() {
     }
   }
 
-  function cambiarImagenTurno(){
-    if(jugadorActual==jugadorA){
+  function cambiarImagenTurno() {
+    if (jugadorActual == jugadorA) {
       divImagenTurno.innerHTML = `<img src="${imgJugadorA}" alt="${jugadorA}">`;
-    }else{
+    } else {
       divImagenTurno.innerHTML = `<img src="${imgJugadorB}" alt="${jugadorB}">`;
     }
   }
@@ -120,7 +120,7 @@ function cargar() {
 
       // Verificar si las casillas tienen una clase de ficha y coinciden
       if (
-        casillas[a].firstChild && // Asegurarse de que hay una ficha en la casilla
+        casillas[a].firstChild.className && // Asegurarse de que hay una ficha en la casilla
         casillas[a].firstChild.className === casillas[b].firstChild.className &&
         casillas[a].firstChild.className === casillas[c].firstChild.className
       ) {
@@ -128,12 +128,12 @@ function cargar() {
       }
     }
     return false;
-  }
-  
+  };
 
   // Método para actualizar el marcador
   const actualizarMarcador = () => {
     let ganador = determinarGanador();
+    abrirVentanaEmergente("Ganador");
 
     if (ganador === "x") {
       victoriasA++;
@@ -151,30 +151,117 @@ function cargar() {
 
   // Reiniciar el juego
 
-  // Pantalla error
+  // Pantalla error, no borrar el codigo por favor
 
-  /*
-  let idError = setTimeout(function () {
-    // Abre la página de Google en una nueva ventana de 500x500px
+  function abrirVentanaEmergente(mensaje) {
+    let idError = setTimeout(function () {
+      // Abre la página de Google en una nueva ventana de 500x500px
 
-    let ventanaError = window.open(
-      "about:blank",
-      "_blank",
-      "width=200px,height=100px,left=50px,top=50px" // Desde la ventana
-    );
+      let ventanaError = window.open(
+        "about:blank",
+        "_blank",
+        "width=200px,height=100px,left=50px,top=50px" // Desde la ventana
+      );
 
-    if (ventanaError) {
-      ventanaError.document.write(`
-       <html>
-        <head>
-          <title>Error</title>
-            <body>
-          <p>CASILLA OCUPADA.</p>
-        </body>
-      </html>
-      `);
+      switch (mensaje) {
+        case "Error":
+          ventanaError.document.write(`
+      <html>
+       <head>
+         <title>Error</title>
+           <body>
+         <p>CASILLA OCUPADA.</p>
+       </body>
+     </html>
+     `);
+
+          // LLamada al método para que vuelva la ficha a su posición de origen
+          break;
+
+        case "Turno":
+          ventanaError.document.write(`
+      <html>
+       <head>
+         <title>Error</title>
+           <body>
+         <p>TURNO INCORRECTO.</p>
+       </body>
+     </html>
+     `);
+
+          break;
+        case "Ganador":
+          ventanaError.document.write(`
+      <html>
+       <head>
+         <title>Error</title>
+           <body>
+         <p>GANADOR JUGADOR X.</p>
+       </body>
+     </html>
+     `);
+          break;
+
+        default:
+          break;
+      }
+
+      if (ventanaError) {
+      }
+    }, 1000); // Duración de 3 segundos
+  }
+
+  // Función F5
+
+  window.addEventListener("keydown", detectarF5);
+
+  function detectarF5(event) {
+    // Obtengo la tecla pulsada
+    let teclaPulsada = event.key;
+
+    //alert(teclaPulsada);
+    // Si es F5
+    if (teclaPulsada === "F5") {
+      // Prevengo el comportamiento por defecto de F5 (recargar la página)
+      event.preventDefault();
+
+      // Obtengo todas las variables y las seteo a 0
+      let marcadorA = document.getElementById("victoriasA");
+      let marcadorB = document.getElementById("victoriasB");
+
+      marcadorA.innerHTML = 0;
+      marcadorB.innerHTML = 0;
+
+      // Llama a la función que reinicia las casillas
+      reestablecerFichas();
     }
-  }, 1000); // Duración de 3 segundos
-*/
-  // Pantalla ganador
+  }
+  // Recorro todos los td y verifico si tienen algo
+  function reestablecerFichas() {
+    // Obtengo todos los td
+    let casillas = Array.from(document.getElementsByTagName("td"));
+
+    // Recorro todas las casillas
+    for (let i = 0; i < casillas.length; i++) {
+      // Si tiene algo, lo borro
+      if (casillas[i].hasChildNodes()) {
+        // Vacio el contenido del td
+        casillas[i].innerHTML = "";
+      }
+    }
+
+    // Cargo las imagenes los divs
+
+    // Obtengo de los divs las fichas que haya
+
+    const jugadorA = document.getElementById("jugadorA");
+    const jugadorB = document.getElementById("jugadorB");
+
+    // Vaciar las imágenes en los divs (si fuera necesario)
+    jugadorA.innerHTML = '<h3>Victorias A:<span id="victoriasA">0</span></h3>';
+    jugadorB.innerHTML = '<h3>Victorias B:<span id="victoriasB">0</span></h3>';
+
+    // Y llamo a la función inicio
+    inicioJugador();
+  }
 }
