@@ -131,9 +131,9 @@ function cargar() {
         return casillas[a].firstChild.className; // Retorna 'x' o 'o' según el ganador
       }
     }
-  }
     return false;
-  };
+  }
+  
 
   // Método para actualizar el marcador
   const actualizarMarcador = () => {
