@@ -3,8 +3,6 @@ window.addEventListener("load", cargar);
 let jugadorA = "x";
 let jugadorB = "o";
 let jugadorActual;
-let victoriasA=0;
-let victoriasB=0;
 
 // Localizaciones de las imagenes
 let imgJugadorA = "../../imagenes/x.jpg";
@@ -34,8 +32,10 @@ function cargar() {
       event.preventDefault();
     });
 
+    // Añadimos un drop a los td 
     item.addEventListener("drop", function (event) {
       event.preventDefault();
+      // Al td objetivo le pasamos 
       event.target.appendChild(
         document.getElementById(event.dataTransfer.getData("text/plain"))
       );
@@ -89,39 +89,38 @@ function cargar() {
 
   // Método para determinar el ganador
   const determinarGanador = () => {
-    let casillas = document.querySelectorAll("#tabla td");
 
+    let casillas=document.querySelectorAll("td");
+    
     // Definir las combinaciones ganadoras del tablero
-    const combinacionesGanadoras = [
-      [0, 1, 2], // Filas
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6], // Columnas
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8], // Diagonales
-      [2, 4, 6],
-    ];
+  const combinacionesGanadoras = [
+    [0, 1, 2], // Filas
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6], // Columnas
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8], // Diagonales
+    [2, 4, 6]
+  ];
+  // Revisar cada combinación ganadora
+  for (let i = 0; i < combinacionesGanadoras.length; i++) {
+    const [a, b, c] = combinacionesGanadoras[i];
 
-    // Revisar cada combinación ganadora
-    for (let i = 0; i < combinacionesGanadoras.length; i++) {
-      const [a, b, c] = combinacionesGanadoras[i];
-
-      // Verificar si las casillas tienen una clase de ficha y coinciden
-      if (
-        casillas[a].firstChild && // Asegurarse de que hay una ficha en la casilla
-        casillas[a].firstChild.className === casillas[b].firstChild.className &&
-        casillas[a].firstChild.className === casillas[c].firstChild.className
-      ) {
-        return casillas[a].firstChild.className; // Retorna 'x' o 'o' según el ganador
-      }
+    if (
+      casillas[a].className &&
+      casillas[a].className === casillas[b].className &&
+      casillas[a].className === casillas[c].className
+    ) {
+      return casillas[a].className; // Retorna 'X' o 'O' según el ganador
     }
-    return false;
   }
-  
+
+  };
 
   // Método para actualizar el marcador
   const actualizarMarcador = () => {
+    let casillas=document.querySelectorAll("td");
     let ganador = determinarGanador();
 
     if (ganador === "x") {
@@ -129,10 +128,13 @@ function cargar() {
     } else if (ganador === "o") {
       victoriasB++;
     }
+  
 
-    // Actualizar el marcador en el HTML
-    document.getElementById("victoriasA").textContent = victoriasA;
-    document.getElementById("victoriasB").textContent = victoriasB;
+    let marcadorA = document.getElementById("victoriasA");
+    let marcadorB = document.getElementById("victoriasB");
+
+    marcadorA.textContent = victoriasA;
+    marcadorB.textContent = victoriasB;
   };
 
   // Cargar el tablero y la funcionalidad al cargar la página
@@ -162,8 +164,43 @@ function cargar() {
         </body>
       </html>
       `);
-    }
-  }, 1000); // Duración de 3 segundos
-*/
-  // Pantalla ganador
+
+          // LLamada al método para que vuelva la ficha a su posición de origen
+          break;
+
+        case "Turno":
+          ventanaError.document.write(`
+       <html>
+        <head>
+          <title>Error</title>
+            <body>
+          <p>TURNO INCORRECTO.</p>
+        </body>
+      </html>
+      `);
+
+          break;
+        case "Ganador":
+          ventanaError.document.write(`
+       <html>
+        <head>
+          <title>Error</title>
+            <body>
+          <p>GANADOR JUGADOR X.</p>
+        </body>
+      </html>
+      `);
+          break;
+
+        default:
+          break;
+      }
+
+      if (ventanaError) {
+      }
+    }, 1000); // Duración de 3 segundos
+  }
+
+  // Función F5
+  
 }
