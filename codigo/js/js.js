@@ -45,7 +45,6 @@ function cargar() {
         if (ficha.className==jugadorActual) {
           // Mover la ficha a la casilla
           casilla.appendChild(ficha);
-          actualizarMarcador();
         } else {
           abrirVentanaEmergente("Error: Turno Incorrecto");
         }
@@ -57,9 +56,6 @@ function cargar() {
     });
   });
 
-  function dragstart(e) {
-    e.dataTransfer.setData("text/plain", e.target.id);
-  }
 
   // Determinar turno del jugador, comienzan los rojos
   // Determinar turno del jugador de inicio
@@ -83,7 +79,7 @@ function cargar() {
 
   function turnoJugador() {
     // Si hay un ganador(TRUE), llamamos actualizarMarcador
-    if (determinarGanador() != false) {
+    if (determinarGanador() == false) {
       actualizarMarcador();
     } else {
       if (jugadorActual == jugadorA) {
