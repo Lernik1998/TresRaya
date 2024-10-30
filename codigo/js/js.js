@@ -19,6 +19,7 @@ let divImagenTurno = document.getElementById("turnoJugador");
 function cargar() {
   // Determinamos el jugador que comienza
   inicioJugador();
+
   // Obtenemos las fichas (dragables) y las casillas
   let fichas = Array.from(document.querySelectorAll("[draggable='true']"));
   let casillas = Array.from(document.querySelectorAll("#tabla td"));
@@ -27,10 +28,10 @@ function cargar() {
   fichas.forEach((ficha) => {
     ficha.addEventListener("dragstart", function (event) {
       event.dataTransfer.setData("text", ficha.id); // Guardamos el id en dataTransfer
-      event.dataTransfer.effectAllowed = "move";
     });
   });
 
+  // Recorremos las casillas habilitando los eventos de drag
   casillas.forEach((casilla) => {
     casilla.addEventListener("dragenter", function (event) {
       event.preventDefault();
@@ -40,10 +41,9 @@ function cargar() {
       event.preventDefault();
     });
 
+    // Añadimos el evento de drop
     casilla.addEventListener("drop", function (event) {
       event.preventDefault();
-
-      // Comprobar si la casilla ya tiene un hijo (una ficha)
 
       // Obtener el id de la ficha desde dataTransfer
       const fichaId = event.dataTransfer.getData("text");
@@ -51,17 +51,23 @@ function cargar() {
       // Seleccionar la ficha usando el id
       const ficha = document.getElementById(fichaId);
 
+      // Comprobamos que el turno sea el correcto
       if (ficha.className == jugadorActual) {
-        // Mover la ficha a la casilla
-        if (!casilla.hasChildNodes()) {
-          casilla.appendChild(ficha);
 
+        // Comprobar si la casilla ya tiene un hijo (una ficha)
+        if (!casilla.hasChildNodes()) {
+          // Mover la ficha a la casilla
+          casilla.appendChild(ficha);
+          // Cambiamos de turno (dentro se comprueba si hay ganador)
           turnoJugador();
+          // Cambiamos la imagen del turno
           cambiarImagenTurno();
         } else {
+          // Si la casilla está ocupada mostramos error
           abrirVentanaEmergente("Error", "");
         }
       } else {
+        // Mostramos que el turno es incorrecto
         abrirVentanaEmergente("Turno", "");
       }
     });
@@ -71,7 +77,7 @@ function cargar() {
     // Determinar turno del jugador de inicio
     let jugadorEmpieza = Math.floor(Math.random() * 2) + 1;
 
-    // Si es par empieza el jugador A
+    // Si es par empieza el jugador A si no B
     if (jugadorEmpieza % 2 == 0) {
       jugadorActual = jugadorA;
 
@@ -84,10 +90,10 @@ function cargar() {
   }
 
   function turnoJugador() {
-    // Si hay un ganador(TRUE), llamamos actualizarMarcador
+    // Si hay un ganador llamamos actualizarMarcador
     if (determinarGanador() == "x" || determinarGanador() == "o") {
       actualizarMarcador();
-    } else {
+    } else { // Si no, cambiamos el turno
       if (jugadorActual == jugadorA) {
         jugadorActual = jugadorB;
       } else {
@@ -123,16 +129,17 @@ function cargar() {
 
     // Revisar cada combinación ganadora
     for (let i = 0; i < combinacionesGanadoras.length; i++) {
+      //Recogemos las variables a b c segun los arrays contenidos en combinacionesGanadoras
       const [a, b, c] = combinacionesGanadoras[i];
 
-      // Verificar si las casillas tienen una clase de ficha y coinciden
+      //Comprobamos que las tres tengan ficha
       if (
         casillas[a].hasChildNodes() &&
         casillas[b].hasChildNodes() &&
         casillas[c].hasChildNodes()
       ) {
+        // Verificar si la clase de las tres casillas coinciden
         if (
-          casillas[a].firstChild.className && // Asegurarse de que hay una ficha en la casilla
           casillas[a].firstChild.className ===
             casillas[b].firstChild.className &&
           casillas[a].firstChild.className === casillas[c].firstChild.className
@@ -146,101 +153,65 @@ function cargar() {
 
   // Método para actualizar el marcador
   const actualizarMarcador = () => {
-    let ganador = determinarGanador();
-    abrirVentanaEmergente("Ganador", ganador);
+    let ganador = determinarGanador(); //Recogemos el ganador (nunca retorna false porque en turnoJugador ya comprobamos que sea x o o)
+    abrirVentanaEmergente("Ganador", ganador); //Mostramos en otra ventana el ganador
 
+    // Comprobamos el ganador para sumarle la victoria
     if (ganador === "x") {
       victoriasA++;
-      reestablecerFichas();
-    } else if (ganador === "o") {
-      victoriasB++;
-      reestablecerFichas();
+    } else  {
+      victoriasB++; 
     }
+
+    //Restablecemos el tablero
+    reestablecerFichas();
 
     // Actualizar el marcador en el HTML
     document.getElementById("victoriasA").textContent = victoriasA;
     document.getElementById("victoriasB").textContent = victoriasB;
   };
 
-  // Cargar el tablero y la funcionalidad al cargar la página
-  window.addEventListener("load", cargar);
-
-  // Reiniciar el juego
-
-  // Pantalla error, no borrar el codigo por favor
+  // Pantallas emergentes
 
   function abrirVentanaEmergente(mensaje, ganador) {
+    // Esta variable nos sirve para cuando mostramos la ventana de ganar
     if (ganador == "x") {
       ganador = "A";
     } else {
       ganador = "B";
     }
 
-    // Abre la página de Google en una nueva ventana de 500x500px
+    // Creamos la ventana
     let ventanaError = window.open(
       "about:blank",
       "_blank",
-      "width=200px,height=100px,left=50px,top=50px" // Desde la ventana
+      "width=200px,height=100px,left=50px,top=50px"
     );
 
+    //Según el mensaje mostramos una pantalla determinada
     switch (mensaje) {
       case "Error":
-        ventanaError.document.write(`
-      <html>
-       <head>
-         <title>Error</title>
-           <body>
-         <p>CASILLA OCUPADA.</p>
-       </body>
-     </html>
-     `);
-
-        // LLamada al método para que vuelva la ficha a su posición de origen
+        ventanaError.document.write(`<p>CASILLA OCUPADA.</p>`);
         break;
 
       case "Turno":
-        ventanaError.document.write(`
-      <html>
-       <head>
-         <title>Error</title>
-           <body>
-         <p>TURNO INCORRECTO.</p>
-       </body>
-     </html>
-     `);
-
+        ventanaError.document.write(`<p>TURNO INCORRECTO.</p>`);
         break;
+      
       case "Ganador":
-        ventanaError.document.write(
-          `
-      <html>
-       <head>
-         <title>Error</title>
-           <body>
-         <p>GANADOR JUGADOR ` +
-            ganador +
-            `.</p>
-       </body>
-     </html>
-     `
-        );
-        break;
-
-      default:
+        ventanaError.document.write(`<p>GANADOR JUGADOR ` + ganador +`.</p>`);
         break;
     }
-    setInterval(() => ventanaError.close(), 2000); // 2 mejor
+    setInterval(() => ventanaError.close(), 1000);
   }
 
   // Función F5
-
   window.addEventListener("keydown", detectarF5);
 
   function detectarF5(event) {
     // Obtengo la tecla pulsada
     let teclaPulsada = event.key;
 
-    //alert(teclaPulsada);
     // Si es F5
     if (teclaPulsada === "F5") {
       // Prevengo el comportamiento por defecto de F5 (recargar la página)
@@ -250,9 +221,9 @@ function cargar() {
       reestablecerFichas();
     }
   }
-  // Recorro todos los td y verifico si tienen algo
+
   function reestablecerFichas() {
-    // Obtengo todos los td
+    // Obtengo todos los td, fichasO y fichasX
     let casillas = Array.from(document.getElementsByTagName("td"));
     let fichasX = Array.from(document.getElementsByClassName("x"));
     let fichasO = Array.from(document.getElementsByClassName("o"));
@@ -266,15 +237,15 @@ function cargar() {
       }
     }
 
-    // Cargo las imagenes los divs
-
-    // Obtengo de los divs las fichas que haya
-
+    //Recogemos los divs
     const jugadorA = document.getElementById("jugadorA");
     const jugadorB = document.getElementById("jugadorB");
+
+    // Borramos los br que separan las fichas en el sitio inicial
     let br = Array.from(document.getElementsByTagName("br"));
     br.forEach((element) => element.remove());
 
+    //Recorremos las fichas metiendolas en su sitio inicial y separandolas con br
     fichasX.forEach((ficha) => {
       jugadorA.appendChild(ficha);
       jugadorA.appendChild(document.createElement("br"));
