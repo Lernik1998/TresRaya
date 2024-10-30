@@ -22,7 +22,7 @@ function cargar() {
   casillas.forEach((item) => {
     item.addEventListener("dragenter", function (event) {
       event.preventDefault();
-  })});
+  });
 
     
     item.addEventListener("dragover", function (event) {
@@ -42,10 +42,8 @@ function cargar() {
       cambiarImagenTurno();
     } else {
       abrirVentanaEmergente("Error");
-    }
-
-    
-  });
+    }}
+)});
 
   function dragstart(e) {
     e.dataTransfer.setData("text/plain", e.target.id);
@@ -78,7 +76,7 @@ function cargar() {
   } else {
     jugadorActual = jugadorB;
     divImagenTurno.innerHTML = `<img src="${imgJugadorB}" alt="${jugadorB}">`;
-  }
+  }}
 
   function turnoJugador() {
     // Si hay un ganador(TRUE), llamamos actualizarMarcador
@@ -208,4 +206,4 @@ function cargar() {
 
   // Función F5
   
-}}
+}
