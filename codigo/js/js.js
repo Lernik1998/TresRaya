@@ -35,6 +35,7 @@ function cargar() {
          // Comprobar si la casilla ya tiene un hijo
       if (!event.target.hasChildNodes()) {
         event.target.appendChild(document.getElementById(event.dataTransfer.getData("text/plain")));
+        turnoJugador();
         cambiarImagenTurno();
       } else {
         abrirVentanaEmergente("Error");
@@ -47,7 +48,11 @@ function cargar() {
   }
 
   function cambiarImagenTurno(){
-
+    if(jugadorActual==jugadorA){
+      divImagenTurno.innerHTML = `<img src="${imgJugadorA}" alt="${jugadorA}">`;
+    }else{
+      divImagenTurno.innerHTML = `<img src="${imgJugadorB}" alt="${jugadorB}">`;
+    }
   }
 
   // Determinar turno del jugador, comienzan los rojos
@@ -57,8 +62,6 @@ function cargar() {
   // Obtengo div del turno jugador
 
   let divImagenTurno = document.getElementById("turnoJugador");
-
-  alert(divImagenTurno);
 
   // Si es par empieza el jugador A
   if (jugadorEmpieza % 2 == 0) {
@@ -73,9 +76,14 @@ function cargar() {
 
   function turnoJugador() {
     // Si hay un ganador(TRUE), llamamos actualizarMarcador
-    if (determinarGanador()) {
+    if (determinarGanador()!=false) {
+
     } else {
-      // Cambiamos de turno
+      if(jugadorActual==jugadorA){
+        jugadorActual=jugadorB;
+      }else{
+        jugadorActual=jugadorA;
+      }
     }
   }
 
@@ -108,7 +116,7 @@ function cargar() {
       return casillas[a].className; // Retorna 'X' o 'O' según el ganador
     }
   }
-
+    return false;
   };
 
   //Metodo actualizar marcador
