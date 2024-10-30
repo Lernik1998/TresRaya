@@ -1,7 +1,7 @@
 window.addEventListener("load", cargar);
 
-let jugadorA = "Jugador A";
-let jugadorB = "Jugador B";
+let jugadorA = "x";
+let jugadorB = "o";
 let jugadorActual;
 
 // Localizaciones de las imagenes
@@ -41,11 +41,11 @@ function cargar() {
         // Seleccionar la ficha usando el id
         const ficha = document.getElementById(fichaId);
 
-        if (ficha) {
+        if (ficha.className==jugadorActual) {
           // Mover la ficha a la casilla
           casilla.appendChild(ficha);
         } else {
-          //abrirVentanaEmergente("Error: Ficha no encontrada");
+          abrirVentanaEmergente("Error: Turno Incorrecto");
         }
         turnoJugador();
         cambiarImagenTurno();
