@@ -47,6 +47,8 @@ function cargar() {
         } else {
           //abrirVentanaEmergente("Error: Ficha no encontrada");
         }
+        turnoJugador();
+        cambiarImagenTurno();
       } else {
         abrirVentanaEmergente("Error");
       }
@@ -65,7 +67,6 @@ function cargar() {
 
   let divImagenTurno = document.getElementById("turnoJugador");
 
-  alert(divImagenTurno);
 
   // Si es par empieza el jugador A
   if (jugadorEmpieza % 2 == 0) {
@@ -80,9 +81,22 @@ function cargar() {
 
   function turnoJugador() {
     // Si hay un ganador(TRUE), llamamos actualizarMarcador
-    if (determinarGanador()) {
+    if (determinarGanador() != false) {
+      actualizarMarcador();
     } else {
-      // Cambiamos de turno
+      if (jugadorActual == jugadorA) {
+        jugadorActual = jugadorB;
+      } else {
+        jugadorActual = jugadorA;
+      }
+    }
+  }
+
+  function cambiarImagenTurno(){
+    if(jugadorActual==jugadorA){
+      divImagenTurno.innerHTML = `<img src="${imgJugadorA}" alt="${jugadorA}">`;
+    }else{
+      divImagenTurno.innerHTML = `<img src="${imgJugadorB}" alt="${jugadorB}">`;
     }
   }
 
@@ -116,7 +130,7 @@ function cargar() {
       
     }
   }
-
+    return false;
   };
 
   //Metodo actualizar marcador
