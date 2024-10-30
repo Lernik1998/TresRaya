@@ -44,24 +44,25 @@ function cargar() {
       event.preventDefault();
 
       // Comprobar si la casilla ya tiene un hijo (una ficha)
-      if (!casilla.hasChildNodes()) {
-        // Obtener el id de la ficha desde dataTransfer
-        const fichaId = event.dataTransfer.getData("text");
 
-        // Seleccionar la ficha usando el id
-        const ficha = document.getElementById(fichaId);
+      // Obtener el id de la ficha desde dataTransfer
+      const fichaId = event.dataTransfer.getData("text");
 
-        if (ficha.className == jugadorActual) {
-          // Mover la ficha a la casilla
+      // Seleccionar la ficha usando el id
+      const ficha = document.getElementById(fichaId);
+
+      if (ficha.className == jugadorActual) {
+        // Mover la ficha a la casilla
+        if (!casilla.hasChildNodes()) {
           casilla.appendChild(ficha);
 
           turnoJugador();
           cambiarImagenTurno();
         } else {
-          abrirVentanaEmergente("Turno");
+          abrirVentanaEmergente("Error", "");
         }
       } else {
-        abrirVentanaEmergente("Error");
+        abrirVentanaEmergente("Turno", "");
       }
     });
   });
@@ -146,7 +147,7 @@ function cargar() {
   // Método para actualizar el marcador
   const actualizarMarcador = () => {
     let ganador = determinarGanador();
-    abrirVentanaEmergente("Ganador");
+    abrirVentanaEmergente("Ganador", ganador);
 
     if (ganador === "x") {
       victoriasA++;
@@ -168,19 +169,23 @@ function cargar() {
 
   // Pantalla error, no borrar el codigo por favor
 
-  function abrirVentanaEmergente(mensaje) {
-    let idError = setTimeout(function () {
-      // Abre la página de Google en una nueva ventana de 500x500px
+  function abrirVentanaEmergente(mensaje, ganador) {
+    if (ganador == "x") {
+      ganador = "A";
+    } else {
+      ganador = "B";
+    }
 
-      let ventanaError = window.open(
-        "about:blank",
-        "_blank",
-        "width=200px,height=100px,left=50px,top=50px" // Desde la ventana
-      );
+    // Abre la página de Google en una nueva ventana de 500x500px
+    let ventanaError = window.open(
+      "about:blank",
+      "_blank",
+      "width=200px,height=100px,left=50px,top=50px" // Desde la ventana
+    );
 
-      switch (mensaje) {
-        case "Error":
-          ventanaError.document.write(`
+    switch (mensaje) {
+      case "Error":
+        ventanaError.document.write(`
       <html>
        <head>
          <title>Error</title>
@@ -190,11 +195,11 @@ function cargar() {
      </html>
      `);
 
-          // LLamada al método para que vuelva la ficha a su posición de origen
-          break;
+        // LLamada al método para que vuelva la ficha a su posición de origen
+        break;
 
-        case "Turno":
-          ventanaError.document.write(`
+      case "Turno":
+        ventanaError.document.write(`
       <html>
        <head>
          <title>Error</title>
@@ -204,26 +209,27 @@ function cargar() {
      </html>
      `);
 
-          break;
-        case "Ganador":
-          ventanaError.document.write(`
+        break;
+      case "Ganador":
+        ventanaError.document.write(
+          `
       <html>
        <head>
          <title>Error</title>
            <body>
-         <p>GANADOR JUGADOR X.</p>
+         <p>GANADOR JUGADOR ` +
+            ganador +
+            `.</p>
        </body>
      </html>
-     `);
-          break;
+     `
+        );
+        break;
 
-        default:
-          break;
-      }
-
-      if (ventanaError) {
-      }
-    }, 1000); // Duración de 3 segundos
+      default:
+        break;
+    }
+    setInterval(() => ventanaError.close(), 2000); // 2 mejor
   }
 
   // Función F5
@@ -240,15 +246,8 @@ function cargar() {
       // Prevengo el comportamiento por defecto de F5 (recargar la página)
       event.preventDefault();
 
-      // Obtengo todas las variables y las seteo a 0
-      let marcadorA = document.getElementById("victoriasA");
-      let marcadorB = document.getElementById("victoriasB");
-
       // Llama a la función que reinicia las casillas
       reestablecerFichas();
-
-      marcadorA.innerHTML = 0;
-      marcadorB.innerHTML = 0;
     }
   }
   // Recorro todos los td y verifico si tienen algo
