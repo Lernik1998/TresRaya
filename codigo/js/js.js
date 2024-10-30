@@ -1,7 +1,7 @@
 window.addEventListener("load", cargar);
 
-let jugadorA = "Jugador A";
-let jugadorB = "Jugador B";
+let jugadorA = "x";
+let jugadorB = "o";
 let jugadorActual;
 let victoriasA=0;
 let victoriasB=0;
@@ -42,13 +42,15 @@ function cargar() {
         // Seleccionar la ficha usando el id
         const ficha = document.getElementById(fichaId);
 
-        if (ficha) {
+        if (ficha.className==jugadorActual) {
           // Mover la ficha a la casilla
           casilla.appendChild(ficha);
           actualizarMarcador();
         } else {
-          //abrirVentanaEmergente("Error: Ficha no encontrada");
+          abrirVentanaEmergente("Error: Turno Incorrecto");
         }
+        turnoJugador();
+        cambiarImagenTurno();
       } else {
         abrirVentanaEmergente("Error");
       }
@@ -67,7 +69,6 @@ function cargar() {
 
   let divImagenTurno = document.getElementById("turnoJugador");
 
-  alert(divImagenTurno);
 
   // Si es par empieza el jugador A
   if (jugadorEmpieza % 2 == 0) {
@@ -82,9 +83,22 @@ function cargar() {
 
   function turnoJugador() {
     // Si hay un ganador(TRUE), llamamos actualizarMarcador
-    if (determinarGanador()) {
+    if (determinarGanador() != false) {
+      actualizarMarcador();
     } else {
-      // Cambiamos de turno
+      if (jugadorActual == jugadorA) {
+        jugadorActual = jugadorB;
+      } else {
+        jugadorActual = jugadorA;
+      }
+    }
+  }
+
+  function cambiarImagenTurno(){
+    if(jugadorActual==jugadorA){
+      divImagenTurno.innerHTML = `<img src="${imgJugadorA}" alt="${jugadorA}">`;
+    }else{
+      divImagenTurno.innerHTML = `<img src="${imgJugadorB}" alt="${jugadorB}">`;
     }
   }
 
@@ -117,7 +131,8 @@ function cargar() {
         return casillas[a].firstChild.className; // Retorna 'x' o 'o' según el ganador
       }
     }
-    return null; // Retornar null si no hay ganador
+  }
+    return false;
   };
 
   // Método para actualizar el marcador
