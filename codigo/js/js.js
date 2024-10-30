@@ -10,31 +10,43 @@ let imgJugadorB = "../../imagenes/o.jpg";
 
 function cargar() {
 
-  let fichas=Array.from(document.querySelectorAll("[draggable='true']"));
-  let casillas=Array.from(document.getElementsByTagName("td"));
+  let fichas = Array.from(document.querySelectorAll("[draggable='true']"));
+  let casillas = Array.from(document.querySelectorAll("#tabla td"));
 
-  fichas.forEach((item)=>{
-    item.addEventListener("dragstart",dragstart);
+  // Configurar el dragstart para almacenar el id de la ficha arrastrada
+  fichas.forEach((ficha) => {
+    ficha.addEventListener("dragstart", function (event) {
+      event.dataTransfer.setData("text", ficha.id); // Guardamos el id en dataTransfer
+      event.dataTransfer.effectAllowed = "move";
+    });
   });
 
-  casillas.forEach((item)=>{
-    item.addEventListener("dragenter",function(event){
-        event.preventDefault();
-    });
-
-    item.addEventListener("dragover",function(event){
-        event.preventDefault();
-    });
-
-    item.addEventListener("dragleave",function(event){
+  casillas.forEach((casilla) => {
+    casilla.addEventListener("dragenter", function (event) {
       event.preventDefault();
     });
 
-    item.addEventListener("drop",function(event){
-        event.preventDefault();
-         // Comprobar si la casilla ya tiene un hijo
-      if (!event.target.hasChildNodes()) {
-        event.target.appendChild(document.getElementById(event.dataTransfer.getData("text/plain")));
+    casilla.addEventListener("dragover", function (event) {
+      event.preventDefault();
+    });
+
+    casilla.addEventListener("drop", function (event) {
+      event.preventDefault();
+
+      // Comprobar si la casilla ya tiene un hijo (una ficha)
+      if (!casilla.hasChildNodes()) {
+        // Obtener el id de la ficha desde dataTransfer
+        const fichaId = event.dataTransfer.getData("text");
+        
+        // Seleccionar la ficha usando el id
+        const ficha = document.getElementById(fichaId);
+
+        if (ficha) {
+          // Mover la ficha a la casilla
+          casilla.appendChild(ficha);
+        } else {
+          //abrirVentanaEmergente("Error: Ficha no encontrada");
+        }
       } else {
         abrirVentanaEmergente("Error");
       }
@@ -101,6 +113,7 @@ function cargar() {
       casillas[a].className === casillas[c].className
     ) {
       return casillas[a].className; // Retorna 'X' o 'O' según el ganador
+      
     }
   }
 
