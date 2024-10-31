@@ -91,7 +91,7 @@ function cargar() {
 
   function turnoJugador() {
     // Si hay un ganador llamamos actualizarMarcador
-    if (determinarGanador() == "x" || determinarGanador() == "o") {
+    if (comprobar() == "x" || comprobar() == "o") {
       actualizarMarcador();
     } else { // Si no, cambiamos el turno
       if (jugadorActual == jugadorA) {
@@ -112,7 +112,7 @@ function cargar() {
   }
 
   // Método para determinar el ganador
-  const determinarGanador = () => {
+  const comprobar = () => {
     let casillas = document.querySelectorAll("#tabla td");
 
     // Definir las combinaciones ganadoras del tablero
@@ -153,7 +153,7 @@ function cargar() {
 
   // Método para actualizar el marcador
   const actualizarMarcador = () => {
-    let ganador = determinarGanador(); //Recogemos el ganador (nunca retorna false porque en turnoJugador ya comprobamos que sea x o o)
+    let ganador = comprobar(); //Recogemos el ganador (nunca retorna false porque en turnoJugador ya comprobamos que sea x o o)
     abrirVentanaEmergente("Ganador", ganador); //Mostramos en otra ventana el ganador
 
     // Comprobamos el ganador para sumarle la victoria
