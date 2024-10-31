@@ -218,6 +218,9 @@ function cargar() {
 
       // Llama a la función que reinicia las casillas
       reestablecerFichas();
+
+      // Volvemos a hacer que sean draggables
+      desbloquearFichas();
     }
   }
 
@@ -258,10 +261,19 @@ function cargar() {
     inicioJugador();
   }
 
+  // Bloqueamos las fichas haciendo que no sean draggables
   function bloquearFichas() {
     let fichasFinal = Array.from(document.querySelectorAll("[draggable='true']"));
     fichasFinal.forEach(element => {
-      element.getAttribute("draggable") = false;
+      element.setAttribute("draggable",false);
+    });
+  }
+
+  // Desbloqueamos las fichas haciendo que sean draggables
+  function desbloquearFichas() {
+    let fichasFinal = Array.from(document.querySelectorAll("[draggable='false']"));
+    fichasFinal.forEach(element => {
+      element.setAttribute("draggable",true);
     });
   }
 }
